@@ -65,29 +65,43 @@
 			attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
 		}).addTo(map);
 
-		Papa.parse("S_J_GDTD_hyperlink.csv", {
-			download: true,
-			header: true,
-			dynamicTyping: true,
+		Papa.parse("dropbox_links.txt", {
+			download:true,
+			header: false,
 			skipEmptyLines: true,
-			complete: function (results) {
-				console.log(results.data)
-				for (var row of results.data) {
-					row.Filename_1 = row.Filename_1.replace("\\", "")
-					L.circleMarker([row.Lat, row.Lon], {color: "red"}).addTo(map)
-						.bindTooltip(`${row.Filename_1}: ${row.Contents}. ${row.Notes}`)
-						.bindPopup(`<b>${row.Filename_1}</b><br>
-							Date: ${row.Date}<br>
-							Site: ${row.Site}<br>
-							Contents: ${row.Contents}<br>
-							Notes: ${row.Notes}<br>
-							Depth: ${row.Depth_min_}m - ${row.Depth_max_}m<br>
-							Length: ${row.Length}<br>
-							<iframe width=800 height=600 src="https://dl.dropboxusercontent.com/sh/urk4evtyeargv8c/AABS0mbJtOxI2uCIYNOkn1BBa/${row.Filename_1}"/>
-						`, {maxWidth : 800})
-				}
+			complete: function (links) {
+				console.log(links.data);
+				Papa.parse("S_J_GDTD_hyperlink.csv", {
+					download: true,
+					header: true,
+					dynamicTyping: true,
+					skipEmptyLines: true,
+					complete: function (results) {
+						console.log(results.data)
+						for (var row of results.data) {
+							row.Filename_1 = row.Filename_1.replace("\\", "")
+							var url;
+							for (link of links.data) {
+								if (link[0].includes(row.Filename_1)) {
+									url = link[0]
+								}
+							}
+							L.circleMarker([row.Lat, row.Lon], {color: "red"}).addTo(map)
+								.bindTooltip(`${row.Filename_1}: ${row.Contents}. ${row.Notes}`)
+								.bindPopup(`<b>${row.Filename_1}</b><br>
+									Date: ${row.Date}<br>
+									Site: ${row.Site}<br>
+									Contents: ${row.Contents}<br>
+									Notes: ${row.Notes}<br>
+									Depth: ${row.Depth_min_}m - ${row.Depth_max_}m<br>
+									Length: ${row.Length}<br>
+									<iframe width=800 height=600 src="${url}"/>
+								`, {maxWidth : 800})
+						}
+					}
+				});
 			}
-		});
+		})
 
 	</script>
 </body>
