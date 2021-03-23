@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>Queen Charlotte Sound</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
+	<script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+
+	<style>
+		html,
+		body,
+		#map {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		#title {
+			position: absolute;
+			top: 30px;
+			left: 0;
+			right: 0;
+			margin: auto;
+			z-index: 1000;
+			width: 50%;
+			text-align: center;
+			color: white;
+			border-radius: 5px;
+			padding: 10px;
+			background-color: rgba(0, 0, 0, 0.8);
+			font-family: Arial, Helvetica, sans-serif;
+			text-shadow: 2px 2px #000000;
+			font-weight: normal;
+			font-size: 1rem;
+		}
+	</style>
+</head>
+
+<body>
+    <h1 id="title">Queen Charlotte Sound</h1>
+	<div id="map"></div>
+	<script>
+
+		var map = L.map('map').setView([-41.18549, 174.1717], 11);
+		var bounds = map.getBounds();
+		bounds._northEast.lat += 10;
+		bounds._northEast.lng += 10;
+		bounds._southWest.lat -= 10;
+		bounds._southWest.lng -= 10;
+		map.setMaxBounds(bounds);
+
+		L.tileLayer('https://tiles-a.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
+		}).addTo(map);
+
+		Papa.parse("S_J_GDTD_hyperlink.csv", {
+			download: true,
+			header: true,
+			dynamicTyping: true,
+			skipEmptyLines: true,
+			complete: function (results) {
+				console.log(results.data)
+				for (var row of results.data) {
+					L.marker([row.Lat, row.Lon]).addTo(map)
+						.bindTooltip(`${row.Filename_1.replace("\\", "")}: ${row.Contents}. ${row.Notes}`)
+						.bindPopup(`<b>${row.Filename_1.replace("\\", "")}</b><br>
+						Date: ${row.Date}<br>
+						Site: ${row.Site}<br>
+						Contents: ${row.Contents}<br>
+						Notes: ${row.Notes}<br>
+						Depth: ${row.Depth_min_}m - ${row.Depth_max_}m<br>
+						Length: ${row.Length}
+						`)
+				}
+			}
+		});
+
+	</script>
+</body>
+
+</html>
