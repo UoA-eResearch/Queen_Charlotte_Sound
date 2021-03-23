@@ -48,11 +48,11 @@
 </head>
 
 <body>
-    <h1 id="title">Queen Charlotte Sound</h1>
+	<h1 id="title">Queen Charlotte Sound</h1>
 	<div id="map"></div>
 	<script>
 
-		var map = L.map('map').setView([-41.18549, 174.1717], 11);
+		var map = L.map('map').setView([-41.18549, 174.1717], 12);
 		var bounds = map.getBounds();
 		bounds._northEast.lat += 10;
 		bounds._northEast.lng += 10;
@@ -73,16 +73,18 @@
 			complete: function (results) {
 				console.log(results.data)
 				for (var row of results.data) {
-					L.marker([row.Lat, row.Lon]).addTo(map)
-						.bindTooltip(`${row.Filename_1.replace("\\", "")}: ${row.Contents}. ${row.Notes}`)
-						.bindPopup(`<b>${row.Filename_1.replace("\\", "")}</b><br>
-						Date: ${row.Date}<br>
-						Site: ${row.Site}<br>
-						Contents: ${row.Contents}<br>
-						Notes: ${row.Notes}<br>
-						Depth: ${row.Depth_min_}m - ${row.Depth_max_}m<br>
-						Length: ${row.Length}
-						`)
+					row.Filename_1 = row.Filename_1.replace("\\", "")
+					L.circleMarker([row.Lat, row.Lon], {color: "red"}).addTo(map)
+						.bindTooltip(`${row.Filename_1}: ${row.Contents}. ${row.Notes}`)
+						.bindPopup(`<b>${row.Filename_1}</b><br>
+							Date: ${row.Date}<br>
+							Site: ${row.Site}<br>
+							Contents: ${row.Contents}<br>
+							Notes: ${row.Notes}<br>
+							Depth: ${row.Depth_min_}m - ${row.Depth_max_}m<br>
+							Length: ${row.Length}<br>
+							<iframe width=800 height=600 src="https://dl.dropboxusercontent.com/sh/urk4evtyeargv8c/AABS0mbJtOxI2uCIYNOkn1BBa/${row.Filename_1}"/>
+						`, {maxWidth : 800})
 				}
 			}
 		});
