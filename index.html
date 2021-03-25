@@ -79,16 +79,16 @@
 					complete: function (results) {
 						console.log(results.data)
 						for (var row of results.data) {
-							row.Filename_1 = row.Filename_1.replace("\\", "")
+							var filename = row.Filename
 							var url;
 							for (link of links.data) {
-								if (link[0].includes(row.Filename_1)) {
+								if (link[0].includes(filename)) {
 									url = link[0]
 								}
 							}
 							L.circleMarker([row.Lat, row.Lon], {color: "red"}).addTo(map)
-								.bindTooltip(`${row.Filename_1}: ${row.Contents}. ${row.Notes}`)
-								.bindPopup(`<b>${row.Filename_1}</b><br>
+								.bindTooltip(`${filename}: ${row.Contents}. ${row.Notes}`)
+								.bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
 									Site: ${row.Site}<br>
 									Contents: ${row.Contents}<br>
