@@ -74,7 +74,8 @@
 		map.setMaxBounds(bounds);
 
 		L.tileLayer('https://tiles-a.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
-			maxZoom: 18,
+			maxZoom: 23,
+			maxNativeZoom: 17,
 			attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
 		}).addTo(map);
 
