@@ -3,125 +3,126 @@
 
 <head>
 
-	<title>Queen Charlotte Sound</title>
+    <title>Queen Charlotte Sound</title>
 
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-		crossorigin="" />
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-		crossorigin=""></script>
-	<script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
 
-	<style>
-		html,
-		body,
-		#map {
-			width: 100%;
-			height: 100%;
-			margin: 0;
-			padding: 0;
-		}
+    <style>
+        html,
+        body,
+        #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-		#title {
-			position: absolute;
-			top: 30px;
-			left: 0;
-			right: 0;
-			margin: auto;
-			z-index: 1000;
-			width: 50%;
-			text-align: center;
-			color: white;
-			border-radius: 5px;
-			padding: 10px;
-			background-color: rgba(0, 0, 0, 0.8);
-			font-family: Arial, Helvetica, sans-serif;
-			text-shadow: 2px 2px #000000;
-			font-weight: normal;
-			font-size: 1rem;
-		}
+        #title {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 1000;
+            width: 50%;
+            text-align: center;
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            font-family: Arial, Helvetica, sans-serif;
+            text-shadow: 2px 2px #000000;
+            font-weight: normal;
+            font-size: 1rem;
+        }
 
-		.legend {
-			background-color: lightgray;
-			padding: 15px;
-		}
+        .legend {
+            background-color: lightgray;
+            padding: 15px;
+        }
 
-		.legend i {
-			width: 18px;
-			height: 18px;
-			float: left;
-			margin-right: 8px;
-			border-radius: 50%;
-		}
-	</style>
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
-	<h1 id="title">Queen Charlotte Sound</h1>
-	<div id="map"></div>
-	<script>
+    <h1 id="title">Queen Charlotte Sound</h1>
+    <div id="map"></div>
+    <script>
 
-		var map = L.map('map', {
-			minZoom: 6,
-			maxZoom: 23,
-			center: [-41.18549, 174.1717],
-			zoom: 12
-		});
-		var bounds = map.getBounds();
-		bounds._northEast.lat += 10;
-		bounds._northEast.lng += 10;
-		bounds._southWest.lat -= 10;
-		bounds._southWest.lng -= 10;
-		map.setMaxBounds(bounds);
+        var map = L.map('map', {
+            minZoom: 6,
+            maxZoom: 23,
+            center: [-41.18549, 174.1717],
+            zoom: 12
+        });
+        var bounds = map.getBounds();
+        bounds._northEast.lat += 10;
+        bounds._northEast.lng += 10;
+        bounds._southWest.lat -= 10;
+        bounds._southWest.lng -= 10;
+        map.setMaxBounds(bounds);
 
-		L.tileLayer('https://tiles-a.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
-			maxZoom: 23,
-			maxNativeZoom: 17,
-			attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
-		}).addTo(map);
+        L.tileLayer('https://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
+            maxZoom: 23,
+            maxNativeZoom: 17,
+            subdomains: 'abcd',
+            attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
+        }).addTo(map);
 
-		function embed(url) {
-			if (url.includes(".mp4")) {
-				return `<video width="800" height="600" controls>
+        function embed(url) {
+            if (url.includes(".mp4")) {
+                return `<video width="800" height="600" controls>
 							<source src="${url}" type="video/mp4">
 						</video>`;
-			} else {
-				return `<img width=800 height=600 src="${url}">`
-			}
-		}
+            } else {
+                return `<img width=800 height=600 src="${url}">`
+            }
+        }
 
-		Papa.parse("dropbox_links.txt", {
-			download: true,
-			header: false,
-			skipEmptyLines: true,
-			complete: function (links) {
-				console.log(links.data);
-				Papa.parse("S_J_GDTD_hyperlink.csv", {
-					download: true,
-					header: true,
-					dynamicTyping: true,
-					skipEmptyLines: true,
-					complete: function (results) {
-						console.log(results.data)
-						for (var row of results.data) {
-							var filename = row.Filename
-							var url;
-							for (link of links.data) {
-								if (link[0].includes(filename)) {
-									url = link[0]
-								}
-							}
-							var color = "blue";
-							if (filename.endsWith(".mp4")) {
-								color = "red";
-							}
-							L.circleMarker([row.Lat, row.Lon], { color: color }).addTo(map)
-								.bindTooltip(`${filename}: ${row.Contents}. ${row.Notes}`)
-								.bindPopup(`<b>${filename}</b><br>
+        Papa.parse("dropbox_links.txt", {
+            download: true,
+            header: false,
+            skipEmptyLines: true,
+            complete: function (links) {
+                console.log(links.data);
+                Papa.parse("S_J_GDTD_hyperlink.csv", {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
+                        console.log(results.data)
+                        for (var row of results.data) {
+                            var filename = row.Filename
+                            var url;
+                            for (link of links.data) {
+                                if (link[0].includes(filename)) {
+                                    url = link[0]
+                                }
+                            }
+                            var color = "blue";
+                            if (filename.endsWith(".mp4")) {
+                                color = "red";
+                            }
+                            L.circleMarker([row.Lat, row.Lon], { color: color }).addTo(map)
+                                .bindTooltip(`${filename}: ${row.Contents}. ${row.Notes}`)
+                                .bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
 									Site: ${row.Site}<br>
 									Contents: ${row.Contents}<br>
@@ -130,64 +131,64 @@
 									Length: ${row.Length}<br>
 									${embed(url)}
 								`, { maxWidth: 800 })
-						}
-					}
-				});
-			}
-		})
+                        }
+                    }
+                });
+            }
+        })
 
-		Papa.parse("gopro_dropbox_links.txt", {
-			download: true,
-			header: false,
-			skipEmptyLines: true,
-			complete: function (links) {
-				console.log(links.data);
-				Papa.parse("QCS_georef_depth_tagged_Data_col4hyperlink_edit.csv", {
-					download: true,
-					header: true,
-					dynamicTyping: true,
-					skipEmptyLines: true,
-					complete: function (results) {
-						console.log(results.data)
-						for (var row of results.data) {
-							var filename = row.Filename
-							var url;
-							for (link of links.data) {
-								if (link[0].includes(filename)) {
-									url = link[0]
-								}
-							}
-							var color = "blue";
-							if (filename.endsWith(".mp4")) {
-								color = "red";
-							}
-							L.circleMarker([row.Lat, row.Lon], { color: color }).addTo(map)
-								.bindTooltip(`${filename}: ${row.Depth.toLocaleString()}m. ${row.temp}°C`)
-								.bindPopup(`<b>${filename}</b><br>
+        Papa.parse("gopro_dropbox_links.txt", {
+            download: true,
+            header: false,
+            skipEmptyLines: true,
+            complete: function (links) {
+                console.log(links.data);
+                Papa.parse("QCS_georef_depth_tagged_Data_col4hyperlink_edit.csv", {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
+                        console.log(results.data)
+                        for (var row of results.data) {
+                            var filename = row.Filename
+                            var url;
+                            for (link of links.data) {
+                                if (link[0].includes(filename)) {
+                                    url = link[0]
+                                }
+                            }
+                            var color = "blue";
+                            if (filename.endsWith(".mp4")) {
+                                color = "red";
+                            }
+                            L.circleMarker([row.Lat, row.Lon], { color: color }).addTo(map)
+                                .bindTooltip(`${filename}: ${row.Depth.toLocaleString()}m. ${row.temp}°C`)
+                                .bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
 									Time: ${row.Time}<br>
 									Depth: ${row.Depth.toLocaleString()}m<br>
 									Temperature ${row.temp}°C<br>
 									${embed(url)}
 								`, { maxWidth: 800 })
-						}
-					}
-				});
-			}
-		})
+                        }
+                    }
+                });
+            }
+        })
 
-		var legend = L.control({ position: 'bottomright' });
+        var legend = L.control({ position: 'bottomright' });
 
-		legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'info legend');
-			div.innerHTML = `<i style='background-color: red'></i> video<br>
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML = `<i style='background-color: red'></i> video<br>
 							 <i style='background-color: blue'></i> image`;
-			return div;
-		};
+            return div;
+        };
 
-		legend.addTo(map);
+        legend.addTo(map);
 
-	</script>
+    </script>
 </body>
 
 </html>
