@@ -79,15 +79,25 @@
         bounds._southWest.lng -= 10;
         map.setMaxBounds(bounds);
 
-        var hydro = L.tileLayer('https://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
-            maxZoom: 23,
-            maxNativeZoom: 17,
-            subdomains: 'abcd',
-            attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
-        }).addTo(map);
-
         var baseMaps = {
-            "Hydrographic chart": hydro,
+            "Hydrographic chart": L.tileLayer('https://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
+                maxZoom: 23,
+                maxNativeZoom: 17,
+                subdomains: 'abcd',
+                attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
+            }).addTo(map),
+            "2017-2018 aerial imagery": L.tileLayer("http://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=98968/EPSG:3857/{z}/{x}/{y}.png", {
+                maxZoom: 23,
+                maxNativeZoom: 17,
+                subdomains: 'abcd',
+                attribution: 'Aerial imagery &copy; <a href="https://data.linz.govt.nz/layer/98968-marlborough-03m-rural-aerial-photos-2017-2018/">LINZ</a>'
+            }),
+            "2011-2012 aerial imagery": L.tileLayer("http://tiles-a.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=51909/EPSG:3857/{z}/{x}/{y}.png", {
+                maxZoom: 23,
+                maxNativeZoom: 17,
+                subdomains: 'abcd',
+                attribution: 'Aerial imagery &copy; <a href="https://data.linz.govt.nz/layer/51909-marlborough-04m-rural-aerial-photos-2011-2012/">LINZ</a>'
+            }),
             "ESRI WorldImagery": L.tileLayer.provider("Esri.WorldImagery"),
             "Google Hybrid": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
                 maxZoom: 20,
