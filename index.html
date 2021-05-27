@@ -86,6 +86,12 @@
                 subdomains: 'abcd',
                 attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
             }).addTo(map),
+            "LINZ Basemap": L.tileLayer("https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/{z}/{x}/{y}.webp?api=d01eyvkkr9erajj4zpeqykezbgn", {
+                maxZoom: 23,
+                maxNativeZoom: 22,
+                subdomains: 'abcd',
+                attribution: 'Aerial imagery &copy; <a href="//www.linz.govt.nz/data/linz-data/linz-basemaps/data-attribution">LINZ</a>'
+            }),
             "2017-2018 aerial imagery": L.tileLayer("http://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=98968/EPSG:3857/{z}/{x}/{y}.png", {
                 maxZoom: 23,
                 maxNativeZoom: 17,
