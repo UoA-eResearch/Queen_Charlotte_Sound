@@ -114,7 +114,9 @@
         L.control.layers(baseMaps).addTo(map);
 
         function embed(url) {
-            if (url.includes(".mp4")) {
+            if (!url) {
+                return `Missing URL!`
+            } else if (url.includes(".mp4")) {
                 return `<video width="800" height="600" controls>
 							<source src="${url}" type="video/mp4">
 						</video>`;
@@ -128,8 +130,8 @@
             header: false,
             skipEmptyLines: true,
             complete: function (links) {
-                console.log(links.data);
-                Papa.parse("S_J_GDTD_hyperlink.csv", {
+                window.links = links.data.map(l => l[0])
+                Papa.parse("QCS2018_onlinemapdata.csv", {
                     download: true,
                     header: true,
                     dynamicTyping: true,
@@ -137,67 +139,26 @@
                     complete: function (results) {
                         console.log(results.data)
                         for (var row of results.data) {
-                            var filename = row.Filename
-                            var url;
-                            for (link of links.data) {
-                                if (link[0].includes(filename)) {
-                                    url = link[0]
+                            var filename = row["File name"].trim().replace(" ", "_")
+                            for (var link of window.links) {
+                                if (link.includes(filename)) {
+                                    row.url = link
                                 }
                             }
-                            var color = "blue";
-                            if (filename.endsWith(".mp4")) {
-                                color = "red";
-                            }
-                            L.circleMarker([row.Lat, row.Lon], { color: color }).addTo(map)
-                                .bindTooltip(`${filename}: ${row.Contents}. ${row.Notes}`)
-                                .bindPopup(`<b>${filename}</b><br>
-									Date: ${row.Date}<br>
-									Site: ${row.Site}<br>
-									Contents: ${row.Contents}<br>
-									Notes: ${row.Notes}<br>
-									Depth: ${row.Depth_min_}m - ${row.Depth_max_}m<br>
-									Length: ${row.Length}<br>
-									${embed(url)}
-								`, { maxWidth: 800 })
-                        }
-                    }
-                });
-            }
-        })
-
-        Papa.parse("gopro_dropbox_links.txt", {
-            download: true,
-            header: false,
-            skipEmptyLines: true,
-            complete: function (links) {
-                console.log(links.data);
-                Papa.parse("QCS_georef_depth_tagged_Data_col4hyperlink_edit.csv", {
-                    download: true,
-                    header: true,
-                    dynamicTyping: true,
-                    skipEmptyLines: true,
-                    complete: function (results) {
-                        console.log(results.data)
-                        for (var row of results.data) {
-                            var filename = row.Filename
-                            var url;
-                            for (link of links.data) {
-                                if (link[0].includes(filename)) {
-                                    url = link[0]
-                                }
+                            if (!row.url) {
+                                console.error(row)
                             }
                             var color = "blue";
-                            if (filename.endsWith(".mp4")) {
+                            if (row["Video/still"] == "Video") {
                                 color = "red";
                             }
-                            L.circleMarker([row.Lat, row.Lon], { color: color }).addTo(map)
-                                .bindTooltip(`${filename}: ${row.Depth.toLocaleString()}m. ${row.temp}°C`)
+                            L.circleMarker([row.Lat, row.Lng], { color: color }).addTo(map)
+                                .bindTooltip(`${filename}: ${row.Description}`)
                                 .bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
-									Time: ${row.Time}<br>
-									Depth: ${row.Depth.toLocaleString()}m<br>
-									Temperature ${row.temp}°C<br>
-									${embed(url)}
+                                    Short description: ${row.Description}<br>
+									Long description: ${row["General Public Description"]}<br>
+									${embed(row.url)}
 								`, { maxWidth: 800 })
                         }
                     }
