@@ -156,10 +156,14 @@
                                 .bindTooltip(`${filename}: ${row.Description}`)
                                 .bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
-                                    Short description: ${row.Description}<br>
 									Long description: ${row["General Public Description"]}<br>
 									${embed(row.url)}
-								`, { maxWidth: 800 })
+								`, { maxWidth: 800 }).on("popupopen", function(e) {
+                                    var px = map.project(e.target._popup._latlng);
+                                    console.log(px);
+                                    px.y -= 400;
+                                    map.panTo(map.unproject(px),{animate: true});
+                                })
                         }
                     }
                 });
