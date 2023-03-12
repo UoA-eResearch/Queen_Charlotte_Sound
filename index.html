@@ -49,6 +49,7 @@
 		.legend {
 			background-color: lightgray;
 			padding: 15px;
+            max-width: 30%;
 		}
 
 		.legend i {
@@ -182,7 +183,24 @@
 
 		legend.onAdd = function (map) {
 			var div = L.DomUtil.create('div', 'info legend');
-			div.innerHTML = `<i style='background-color: red'></i> video<br>
+			div.innerHTML = `<img src="NSC_logo.png"/><br>
+            When you look around our coastline it is not hard to find areas that have a special place in the hearts
+of many people. We love our coasts, but different people value different things, and this often
+makes it hard to start and support collective actions for improvement. Trying to create a good space
+for more widely engaged discussions across different interests is why the Sustainable Seas National
+Science Challenge has focused on supporting the implementation of Ecosystem-Based Management.
+But for many people the marine environment is out-of-sight-and-out-of-mind. Knowledge of what
+places are like, what they used to be like and how they work to support themselves and us all is vital
+information for resolving debate and making plans to affect positive change.<br><br>
+As part of our work in the projects “Tipping Points” and “Ecological responses to cumulative effects”
+we have been looking at reef and seafloor habitats and we have made this interactive map publicly
+available to allow people to take a sneak peek at the seafloor of Queen Charlotte Sound | Tōtaranui.
+This is simply an assembly of our underwater images with a small description of what you can see.
+We hope this get you thinking and wondering about life on the seafloor, provides some highlights for
+exciting school projects, and helps you understand the effects of sedimentation, fishing and other
+human activities in the Sounds.<br><br>
+<b>Legend:</b><br>
+<i style='background-color: red'></i> video<br>
 							 <i style='background-color: blue'></i> image`;
 			return div;
 		};
