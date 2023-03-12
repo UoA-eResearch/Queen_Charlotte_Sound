@@ -3,187 +3,187 @@
 
 <head>
 
-	<title>Queen Charlotte Sound</title>
+    <title>Queen Charlotte Sound</title>
 
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-		crossorigin="" />
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-		crossorigin=""></script>
-	<script src="https://unpkg.com/leaflet-providers@1.3.0/leaflet-providers.js"></script>
-	<script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-providers@1.3.0/leaflet-providers.js"></script>
+    <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
 
-	<style>
-		html,
-		body,
-		#map {
-			width: 100%;
-			height: 100%;
-			margin: 0;
-			padding: 0;
-		}
+    <style>
+        html,
+        body,
+        #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-		#title {
-			position: absolute;
-			top: 30px;
-			left: 0;
-			right: 0;
-			margin: auto;
-			z-index: 1000;
-			width: 50%;
-			text-align: center;
-			color: white;
-			border-radius: 5px;
-			padding: 10px;
-			background-color: rgba(0, 0, 0, 0.8);
-			font-family: Arial, Helvetica, sans-serif;
-			text-shadow: 2px 2px #000000;
-			font-weight: normal;
-			font-size: 1rem;
-		}
+        #title {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            z-index: 1000;
+            width: 50%;
+            text-align: center;
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            font-family: Arial, Helvetica, sans-serif;
+            text-shadow: 2px 2px #000000;
+            font-weight: normal;
+            font-size: 1rem;
+        }
 
-		.legend {
-			background-color: lightgray;
-			padding: 15px;
+        .legend {
+            background-color: lightgray;
+            padding: 15px;
             max-width: 30%;
-		}
+        }
 
-		.legend i {
-			width: 18px;
-			height: 18px;
-			float: left;
-			margin-right: 8px;
-			border-radius: 50%;
-		}
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
 
-		video::-webkit-media-controls-volume-slider {
-			display: none;
-		}
+        video::-webkit-media-controls-volume-slider {
+            display: none;
+        }
 
-		video::-webkit-media-controls-mute-button {
-			display: none;
-		}
-	</style>
+        video::-webkit-media-controls-mute-button {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-	<h1 id="title">Queen Charlotte Sound</h1>
-	<div id="map"></div>
-	<script>
+    <h1 id="title">Queen Charlotte Sound</h1>
+    <div id="map"></div>
+    <script>
 
-		var map = L.map('map', {
-			minZoom: 6,
-			maxZoom: 23,
-			center: [-41.18549, 174.1717],
-			zoom: 12
-		});
-		var bounds = map.getBounds();
-		bounds._northEast.lat += 10;
-		bounds._northEast.lng += 10;
-		bounds._southWest.lat -= 10;
-		bounds._southWest.lng -= 10;
-		map.setMaxBounds(bounds);
+        var map = L.map('map', {
+            minZoom: 6,
+            maxZoom: 23,
+            center: [-41.18549, 174.1717],
+            zoom: 12
+        });
+        var bounds = map.getBounds();
+        bounds._northEast.lat += 10;
+        bounds._northEast.lng += 10;
+        bounds._southWest.lat -= 10;
+        bounds._southWest.lng -= 10;
+        map.setMaxBounds(bounds);
 
-		var baseMaps = {
-			"Hydrographic chart": L.tileLayer('https://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
-				maxZoom: 23,
-				maxNativeZoom: 17,
-				subdomains: 'abcd',
-				attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
-			}).addTo(map),
-			"LINZ Basemap": L.tileLayer("https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/{z}/{x}/{y}.webp?api=d01eyvkkr9erajj4zpeqykezbgn", {
-				maxZoom: 23,
-				maxNativeZoom: 22,
-				subdomains: 'abcd',
-				attribution: 'Aerial imagery &copy; <a href="//www.linz.govt.nz/data/linz-data/linz-basemaps/data-attribution">LINZ</a>'
-			}),
-			"2017-2018 aerial imagery": L.tileLayer("http://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=98968/EPSG:3857/{z}/{x}/{y}.png", {
-				maxZoom: 23,
-				maxNativeZoom: 17,
-				subdomains: 'abcd',
-				attribution: 'Aerial imagery &copy; <a href="https://data.linz.govt.nz/layer/98968-marlborough-03m-rural-aerial-photos-2017-2018/">LINZ</a>'
-			}),
-			"2011-2012 aerial imagery": L.tileLayer("http://tiles-a.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=51909/EPSG:3857/{z}/{x}/{y}.png", {
-				maxZoom: 23,
-				maxNativeZoom: 17,
-				subdomains: 'abcd',
-				attribution: 'Aerial imagery &copy; <a href="https://data.linz.govt.nz/layer/51909-marlborough-04m-rural-aerial-photos-2011-2012/">LINZ</a>'
-			}),
-			"ESRI WorldImagery": L.tileLayer.provider("Esri.WorldImagery"),
-			"Google Hybrid": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-				maxZoom: 20,
-				subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-			})
-		}
+        var baseMaps = {
+            "Hydrographic chart": L.tileLayer('https://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/set=4759/EPSG:3857/{z}/{x}/{y}.png', {
+                maxZoom: 23,
+                maxNativeZoom: 17,
+                subdomains: 'abcd',
+                attribution: 'Hydrographic chart &copy; <a href="https://data.linz.govt.nz/set/4759-south-island-charts/">LINZ</a>'
+            }).addTo(map),
+            "LINZ Basemap": L.tileLayer("https://basemaps.linz.govt.nz/v1/tiles/aerial/EPSG:3857/{z}/{x}/{y}.webp?api=d01eyvkkr9erajj4zpeqykezbgn", {
+                maxZoom: 23,
+                maxNativeZoom: 22,
+                subdomains: 'abcd',
+                attribution: 'Aerial imagery &copy; <a href="//www.linz.govt.nz/data/linz-data/linz-basemaps/data-attribution">LINZ</a>'
+            }),
+            "2017-2018 aerial imagery": L.tileLayer("http://tiles-{s}.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=98968/EPSG:3857/{z}/{x}/{y}.png", {
+                maxZoom: 23,
+                maxNativeZoom: 17,
+                subdomains: 'abcd',
+                attribution: 'Aerial imagery &copy; <a href="https://data.linz.govt.nz/layer/98968-marlborough-03m-rural-aerial-photos-2017-2018/">LINZ</a>'
+            }),
+            "2011-2012 aerial imagery": L.tileLayer("http://tiles-a.data-cdn.linz.govt.nz/services;key=e9447348492944328e52c333dbed4c0e/tiles/v4/layer=51909/EPSG:3857/{z}/{x}/{y}.png", {
+                maxZoom: 23,
+                maxNativeZoom: 17,
+                subdomains: 'abcd',
+                attribution: 'Aerial imagery &copy; <a href="https://data.linz.govt.nz/layer/51909-marlborough-04m-rural-aerial-photos-2011-2012/">LINZ</a>'
+            }),
+            "ESRI WorldImagery": L.tileLayer.provider("Esri.WorldImagery"),
+            "Google Hybrid": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            })
+        }
 
-		L.control.layers(baseMaps).addTo(map);
+        L.control.layers(baseMaps).addTo(map);
 
-		function embed(url) {
-			if (!url) {
-				return `Missing URL!`
-			} else if (url.includes(".mp4")) {
-				return `<video width="800" height="600" controls muted>
+        function embed(url) {
+            if (!url) {
+                return `Missing URL!`
+            } else if (url.includes(".mp4")) {
+                return `<video width="800" height="600" controls muted>
 							<source src="${url}" type="video/mp4">
 						</video>`;
-			} else {
-				return `<a href="${url}" target="_blank"><img width=800 height=600 src="${url}"></a>`
-			}
-		}
+            } else {
+                return `<a href="${url}" target="_blank"><img width=800 height=600 src="${url}"></a>`
+            }
+        }
 
-		Papa.parse("dropbox_links.txt", {
-			download: true,
-			header: false,
-			skipEmptyLines: true,
-			complete: function (links) {
-				window.links = links.data.map(l => l[0])
-				Papa.parse("QCS2018_onlinemapdata.csv", {
-					download: true,
-					header: true,
-					dynamicTyping: true,
-					skipEmptyLines: true,
-					complete: function (results) {
-						console.log(results.data)
-						for (var row of results.data) {
-							var filename = row["File name"].trim().replace(" ", "_")
-							for (var link of window.links) {
-								if (link.includes(filename)) {
-									row.url = link
-								}
-							}
-							if (!row.url) {
-								console.error(row)
-							}
-							var color = "blue";
-							if (row["Video/still"] == "Video") {
-								color = "red";
-							}
-							L.circleMarker([row.Lat, row.Lng], { color: color }).addTo(map)
-								.bindTooltip(`${filename}: ${row.Description}`)
-								.bindPopup(`<b>${filename}</b><br>
+        Papa.parse("dropbox_links.txt", {
+            download: true,
+            header: false,
+            skipEmptyLines: true,
+            complete: function (links) {
+                window.links = links.data.map(l => l[0])
+                Papa.parse("QCS2018_onlinemapdata.csv", {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
+                        console.log(results.data)
+                        for (var row of results.data) {
+                            var filename = row["File name"].trim().replace(" ", "_")
+                            for (var link of window.links) {
+                                if (link.includes(filename)) {
+                                    row.url = link
+                                }
+                            }
+                            if (!row.url) {
+                                console.error(row)
+                            }
+                            var color = "blue";
+                            if (row["Video/still"] == "Video") {
+                                color = "red";
+                            }
+                            L.circleMarker([row.Lat, row.Lng], { color: color }).addTo(map)
+                                .bindTooltip(`${filename}: ${row.Description}`)
+                                .bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
 									Description: ${row["General Public Description"]}<br>
 									${embed(row.url)}
 								`, { maxWidth: 800 }).on("popupopen", function (e) {
-									var px = map.project(e.target._popup._latlng);
-									console.log(px);
-									px.y -= 400;
-									map.panTo(map.unproject(px), { animate: true });
-								})
-						}
-					}
-				});
-			}
-		})
+                                    var px = map.project(e.target._popup._latlng);
+                                    console.log(px);
+                                    px.y -= 400;
+                                    map.panTo(map.unproject(px), { animate: true });
+                                })
+                        }
+                    }
+                });
+            }
+        })
 
-		var legend = L.control({ position: 'bottomright' });
+        var legend = L.control({ position: 'bottomright' });
 
-		legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'info legend');
-			div.innerHTML = `<img src="NSC_logo.png"/><br>
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML = `<img src="NSC_logo.png"/><br>
             When you look around our coastline it is not hard to find areas that have a special place in the hearts
 of many people. We love our coasts, but different people value different things, and this often
 makes it hard to start and support collective actions for improvement. Trying to create a good space
@@ -202,12 +202,12 @@ human activities in the Sounds.<br><br>
 <b>Legend:</b><br>
 <i style='background-color: red'></i> video<br>
 							 <i style='background-color: blue'></i> image`;
-			return div;
-		};
+            return div;
+        };
 
-		legend.addTo(map);
+        legend.addTo(map);
 
-	</script>
+    </script>
 </body>
 
 </html>
