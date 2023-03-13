@@ -120,7 +120,17 @@
             })
         }
 
-        L.control.layers(baseMaps).addTo(map);
+        var overlays = {
+            "Bathymetry": L.tileLayer.wms('https://gis.marlborough.govt.nz/server/services/Cache/MultibeamBathymetry/MapServer/WMSServer', {
+                layers: "8",
+                format: 'image/png',
+                transparent: true,
+                maxZoom: 23,
+                attribution: "Bathymetry &copy; Marlborough District Council"
+            }).addTo(map)
+        }
+
+        L.control.layers(baseMaps, overlays).addTo(map);
 
         function embed(url) {
             if (!url) {
@@ -199,9 +209,12 @@ This is simply an assembly of our underwater images with a small description of 
 We hope this get you thinking and wondering about life on the seafloor, provides some highlights for
 exciting school projects, and helps you understand the effects of sedimentation, fishing and other
 human activities in the Sounds.<br><br>
-<b>Legend:</b><br>
-<i style='background-color: red'></i> video<br>
-							 <i style='background-color: blue'></i> image`;
+
+Circle marker legend:<br>
+    <i style='background-color: red'></i> video<br>
+    <i style='background-color: blue'></i> image<br><br>
+Bathymetry legend:<br>
+    <img src="https://www.arcgis.com/sharing/rest/content/items/155a89b0beb74035bd1c4c71f6f36646/resources/Bathymetry__1532491588559__w101.png">`;
             return div;
         };
 
