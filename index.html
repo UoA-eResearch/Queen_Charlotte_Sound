@@ -17,6 +17,23 @@
     <script src="https://unpkg.com/leaflet-providers@1.3.0/leaflet-providers.js"></script>
     <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
     <style>
         html,
         body,
@@ -67,13 +84,62 @@
         video::-webkit-media-controls-mute-button {
             display: none;
         }
+
+        .logo {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+        }
     </style>
 </head>
 
 <body>
     <h1 id="title">Queen Charlotte Sound</h1>
     <div id="map"></div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">About this map</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><img class="logo" src="NSC_logo.png" /><br>
+                        When you look around our coastline it is not hard to find areas that have a special place in the
+                        hearts
+                        of many people. We love our coasts, but different people value different things, and this often
+                        makes it hard to start and support collective actions for improvement. Trying to create a good
+                        space
+                        for more widely engaged discussions across different interests is why the Sustainable Seas
+                        National
+                        Science Challenge has focused on supporting the implementation of Ecosystem-Based Management.
+                        But for many people the marine environment is out-of-sight-and-out-of-mind. Knowledge of what
+                        places are like, what they used to be like and how they work to support themselves and us all is
+                        vital
+                        information for resolving debate and making plans to affect positive change.<br><br>
+                        As part of our work in the projects “Tipping Points” and “Ecological responses to cumulative
+                        effects”
+                        we have been looking at reef and seafloor habitats and we have made this interactive map
+                        publicly
+                        available to allow people to take a sneak peek at the seafloor of Queen Charlotte Sound |
+                        Tōtaranui.
+                        This is simply an assembly of our underwater images with a small description of what you can
+                        see.
+                        We hope this get you thinking and wondering about life on the seafloor, provides some highlights
+                        for
+                        exciting school projects, and helps you understand the effects of sedimentation, fishing and
+                        other
+                        human activities in the Sounds.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
+        $('#exampleModal').modal('show')
 
         var map = L.map('map', {
             minZoom: 6,
@@ -193,24 +259,7 @@
 
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML = `<img src="NSC_logo.png"/><br>
-            When you look around our coastline it is not hard to find areas that have a special place in the hearts
-of many people. We love our coasts, but different people value different things, and this often
-makes it hard to start and support collective actions for improvement. Trying to create a good space
-for more widely engaged discussions across different interests is why the Sustainable Seas National
-Science Challenge has focused on supporting the implementation of Ecosystem-Based Management.
-But for many people the marine environment is out-of-sight-and-out-of-mind. Knowledge of what
-places are like, what they used to be like and how they work to support themselves and us all is vital
-information for resolving debate and making plans to affect positive change.<br><br>
-As part of our work in the projects “Tipping Points” and “Ecological responses to cumulative effects”
-we have been looking at reef and seafloor habitats and we have made this interactive map publicly
-available to allow people to take a sneak peek at the seafloor of Queen Charlotte Sound | Tōtaranui.
-This is simply an assembly of our underwater images with a small description of what you can see.
-We hope this get you thinking and wondering about life on the seafloor, provides some highlights for
-exciting school projects, and helps you understand the effects of sedimentation, fishing and other
-human activities in the Sounds.<br><br>
-
-Circle marker legend:<br>
+            div.innerHTML = `Circle marker legend:<br>
     <i style='background-color: red'></i> video<br>
     <i style='background-color: blue'></i> image<br><br>
 Bathymetry legend:<br>
