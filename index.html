@@ -66,6 +66,7 @@
         .legend {
             background-color: lightgray;
             padding: 15px;
+            min-width: 163px;
             max-width: 30%;
         }
 
@@ -95,7 +96,7 @@
 </head>
 
 <body>
-    <h1 id="title">Queen Charlotte Sound</h1>
+    <h1 id="title">Queen Charlotte Sound | Tōtaranui</h1>
     <div id="map"></div>
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -259,7 +260,10 @@
 
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML = `Circle marker legend:<br>
+            div.innerHTML = `<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            About this map
+            </button><br>
+Circle marker legend:<br>
     <i style='background-color: red'></i> video<br>
     <i style='background-color: blue'></i> image<br><br>
 Bathymetry legend:<br>
