@@ -33,6 +33,7 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
+    <script src="https://unpkg.com/papaparse@5.3.0/papaparse.min.js"></script>
 
     <style>
         html,
@@ -211,12 +212,13 @@
             }
         }
 
-        Papa.parse("dropbox_links.txt", {
+        Papa.parse("dropbox_links.csv", {
             download: true,
-            header: false,
+            header: true,
             skipEmptyLines: true,
-            complete: function (links) {
-                window.links = links.data.map(l => l[0])
+            complete: function (results) {
+                console.log(results)
+                window.links = results.data
                 Papa.parse("QCS2018_onlinemapdata.csv", {
                     download: true,
                     header: true,
@@ -226,16 +228,24 @@
                         console.log(results.data)
                         for (var row of results.data) {
                             var filename = row["File name"].trim().replace(" ", "_")
-                            for (var link of window.links) {
-                                if (link.includes(filename)) {
-                                    row.url = link
+                            var full_filename = filename
+                            if (row["Video/still"].trim() == "Video") {
+                                full_filename = "/Cumulative-effects-data---QCS/Final info/Compressed video/" + filename
+                            }
+                            var candidates = []
+                            for (link of links) {
+                                if (link.path.includes(full_filename)) {
+                                    candidates.push(link)
                                 }
                             }
-                            if (!row.url) {
-                                console.error(row)
+                            if (candidates.length == 0) {
+                                console.warn(filename, "not found in dropbox_links.csv")
+                            } else if (candidates.length > 1) {
+                                console.warn(row, filename, "ambiguous", candidates)
                             }
+                            var url = candidates[0]?.link
                             var color = "blue";
-                            if (row["Video/still"] == "Video") {
+                            if (row["Video/still"].trim() == "Video") {
                                 color = "red";
                             }
                             L.circleMarker([row.Lat, row.Lng], { color: color }).addTo(map)
@@ -243,7 +253,7 @@
                                 .bindPopup(`<b>${filename}</b><br>
 									Date: ${row.Date}<br>
 									Description: ${row["General Public Description"]}<br>
-									${embed(row.url)}
+									${embed(url)}
 								`, { maxWidth: 800 }).on("popupopen", function (e) {
                                     var px = map.project(e.target._popup._latlng);
                                     console.log(px);

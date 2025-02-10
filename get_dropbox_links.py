@@ -1,34 +1,50 @@
 #!/usr/bin/env python3
 
-# This script uses Dropbox's Python API to fetch shared links for each file in a shared folder
+# This script uses Dropbox's Python API to fetch shared links for each file in a folder, recursively
 
 from dropbox import Dropbox
-from dropbox.files import SharedLink, FolderMetadata
+from dropbox.files import FolderMetadata
+from dropbox.common import PathRoot
 import os
 from tqdm import tqdm
-from tqdm.contrib.concurrent import thread_map
+from tqdm.contrib.concurrent import thread_map, process_map
+import pandas as pd
+from dotenv import load_dotenv
+load_dotenv()
 
-# From https://www.dropbox.com/developers/apps
+# Use rclone to generate a bearer token
 DROPBOX_TOKEN = os.environ["DROPBOX_TOKEN"]
-SHARED_LINK = "https://www.dropbox.com/sh/ct1wvq1ujz44nsz/AADGZHF3HVaUYiZfzGY0iTZua?dl=0"
 dbx = Dropbox(DROPBOX_TOKEN)
+print(dbx.users_get_current_account().root_info)
+root_namespace_id = dbx.users_get_current_account().root_info.root_namespace_id
+print(root_namespace_id)
+dbx = dbx.with_path_root(PathRoot.root(root_namespace_id))
 
 files = []
-def get_files(folder = ""):
-    folder_result = dbx.files_list_folder(folder, shared_link = SharedLink(SHARED_LINK))
-    print(f"Found {len(folder_result.entries)} files in {folder}")
-    assert not folder_result.has_more
+
+def handle_result(folder, folder_result):
     for item in folder_result.entries:
         if type(item) == FolderMetadata:
-            get_files("/" + folder + "/" + item.name)
+            get_files(item.path_display)
         else:
-            files.append(folder + "/" + item.name)
+            files.append(item.path_display)
 
-get_files()
+def get_files(folder):
+    folder_result = dbx.files_list_folder(folder)
+    print(f"Got {len(folder_result.entries)} files from {folder}")
+    handle_result(folder, folder_result)
+    while folder_result.has_more:
+        folder_result = dbx.files_list_folder_continue(folder_result.cursor)
+        handle_result(folder, folder_result)
+
+get_files("/Cumulative-effects-data---QCS/Final info")
+files = pd.Series(files)
+print(files)
 
 def get_shared_link(file):
-    return dbx.sharing_get_shared_link_metadata(SHARED_LINK, file).url.replace("https://www", "https://dl") + "\n"
+    return dbx.sharing_create_shared_link(file).url + "&raw=1"
 
-results = thread_map(get_shared_link, files)
-with open("dropbox_links.txt", "w") as f:
-    f.writelines(results)
+links = thread_map(get_shared_link, files)
+df = pd.DataFrame({"path": files, "link": links})
+print(df)
+df.to_csv("dropbox_links.csv", index=False)
